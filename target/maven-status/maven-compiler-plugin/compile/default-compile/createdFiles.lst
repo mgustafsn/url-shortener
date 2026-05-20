@@ -1,0 +1,5 @@
+com/marcus/urlshortener/functions/RedirectFunction.class
+com/marcus/urlshortener/util/CodeGenerator.class
+com/marcus/urlshortener/functions/ShortenFunction.class
+com/marcus/urlshortener/model/UrlEntry.class
+com/marcus/urlshortener/service/DynamoDbService.class

@@ -1,0 +1,5 @@
+/home/mgustafsson/Documents/Projects/url-shortener/src/main/java/com/marcus/urlshortener/functions/RedirectFunction.java
+/home/mgustafsson/Documents/Projects/url-shortener/src/main/java/com/marcus/urlshortener/functions/ShortenFunction.java
+/home/mgustafsson/Documents/Projects/url-shortener/src/main/java/com/marcus/urlshortener/model/UrlEntry.java
+/home/mgustafsson/Documents/Projects/url-shortener/src/main/java/com/marcus/urlshortener/service/DynamoDbService.java
+/home/mgustafsson/Documents/Projects/url-shortener/src/main/java/com/marcus/urlshortener/util/CodeGenerator.java

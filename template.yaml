@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: URL Shortener - Marcus Gustafsson
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 512
+    Runtime: java21
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref UrlTable
+
+Resources:
+
+  UrlTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: url-shortener-table
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: code
+          AttributeType: S
+      KeySchema:
+        - AttributeName: code
+          KeyType: HASH
+
+  ShortenFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: url-shortener-shorten
+      CodeUri: target/url-shortener-1.0-SNAPSHOT.jar
+      Handler: com.marcus.urlshortener.functions.ShortenFunction::handleRequest
+      Runtime: java21
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UrlTable
+      Events:
+        ShortenApi:
+          Type: Api
+          Properties:
+            Path: /shorten
+            Method: post
+
+
+  RedirectFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: url-shortener-redirect
+      CodeUri: target/url-shortener-1.0-SNAPSHOT.jar
+      Handler: com.marcus.urlshortener.functions.RedirectFunction::handleRequest
+      Runtime: java21
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref UrlTable
+      Events:
+        RedirectApi:
+          Type: Api
+          Properties:
+            Path: /{code}
+            Method: get
+Outputs:
+  ApiUrl:
+    Description: "API Gateway endpoint URL for Prod stage"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+  ShortenFunctionArn:
+    Description: "ARN of the ShortenFunction Lambda function"
+    Value: !GetAtt ShortenFunction.Arn
+  RedirectFunctionArn:
+    Description: "ARN of the RedirectFunction Lambda function"
+    Value: !GetAtt RedirectFunction.Arn
